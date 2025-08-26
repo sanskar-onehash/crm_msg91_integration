@@ -10,3 +10,6 @@ class MSG91Settings(Document):
 
     def send_otp(self, *args, **kwargs):
         msg91.send_otp(*args, **kwargs)
+
+    def verify_otp(self, *args, **kwargs):
+        msg91.verify_otp(*args, **kwargs)

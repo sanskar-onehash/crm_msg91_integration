@@ -14,3 +14,14 @@ def send_otp(
     return utils.make_post_request(
         "/otp", params=params, data=template_values, raise_exception=raise_exception
     )
+
+
+def verify_otp(otp, mobile, raise_exception=True):
+    params = {
+        "otp": otp,
+        "mobile": mobile,
+    }
+
+    return utils.make_get_request(
+        "/otp/verify", params=params, raise_exception=raise_exception
+    )

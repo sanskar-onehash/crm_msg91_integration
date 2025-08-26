@@ -246,3 +246,4 @@ app_license = "mit"
 # --------------------------------
 
 send_otp = ["crm_msg91_integration.msg91.hooks.send_otp"]
+verify_otp = ["crm_msg91_integration.msg91.hooks.verify_otp"]

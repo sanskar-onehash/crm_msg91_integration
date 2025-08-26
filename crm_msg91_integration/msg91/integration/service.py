@@ -23,3 +23,21 @@ def send_otp(otp=None, mobile_no=None, template_params=None):
         return otp_data
 
     frappe.throw(f"Error sending otp: {otp_data.get('message')}")
+
+
+def verify_otp(otp, mobile_no):
+    msg91_settings = frappe.get_single("MSG91 Settings")
+    if not msg91_settings.enabled:
+        frappe.throw("MSG91 Integration is not enabled")
+
+    otp_res = api.verify_otp(
+        otp,
+        mobile_no,
+        raise_exception=False,
+    )
+    otp_data = utils.parse_otp_res(otp_res)
+
+    if otp_data.get("type") == "success":
+        return otp_data
+
+    frappe.throw(f"Error sending otp: {otp_data.get('message')}")
