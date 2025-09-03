@@ -12,7 +12,7 @@ def send_otp(
     }
 
     return utils.make_post_request(
-        "/otp", params=params, data=template_values, raise_exception=raise_exception
+        "/otp", params=params, json=template_values, raise_exception=raise_exception
     )
 
 
