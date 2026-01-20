@@ -37,7 +37,4 @@ def verify_otp(otp, mobile_no):
     )
     otp_data = utils.parse_otp_res(otp_res)
 
-    if otp_data.get("type") == "success":
-        return otp_data
-
-    frappe.throw(f"Error sending otp: {otp_data.get('message')}")
+    return {"status": otp_data.get("type"), "message": otp_data.get("message")}
