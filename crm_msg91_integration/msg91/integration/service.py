@@ -9,17 +9,34 @@ def send_otp(otp=None, mobile_no=None, expiry=None, template_params=None):
     if not msg91_settings.otp_template:
         frappe.throw("OTP Template is missing in MSG91 Settings")
 
+    expiry = expiry or utils.OTP_EXPIRY
     otp_res = api.send_otp(
         otp,
         mobile_no,
-        expiry or utils.OTP_EXPIRY,
+        expiry,
         msg91_settings.otp_template,
         template_params,
         raise_exception=False,
     )
     otp_data = utils.parse_otp_res(otp_res)
+    message_sent = otp_data.get("type") == "success"
 
-    if otp_data.get("type") == "success":
+    try:
+        frappe.get_doc(
+            {
+                "doctype": "MSG91 OTP Log",
+                "mobile_no": mobile_no,
+                "otp": otp,
+                "expiry": expiry,
+                "status": "Success" if message_sent else "Failed",
+                "response": frappe.json.dumps(otp_data),
+                "template_params": frappe.json.dumps(template_params),
+            }
+        ).insert(ignore_permissions=True)
+    except Exception:
+        pass
+
+    if message_sent:
         return otp_data
 
     frappe.throw(f"Error sending otp: {otp_data.get('message')}")
